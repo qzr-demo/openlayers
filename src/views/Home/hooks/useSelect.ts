@@ -1,57 +1,20 @@
-import { Select } from 'ol/interaction'
+export default function (map, setSelect) {
+  map.on('click', e => {
+    const { pixel } = e
 
-import { click } from 'ol/events/condition'
-
-
-export default function (map, dragBox, selectedStyle) {
-  // a normal select interaction to handle click
-  const select = new Select({
-    condition: click,
-    multi: true,
-    style: selectedStyle,
-    filter: (feature, layer) => {
-      console.log(feature, layer)
-      return true
-    },
-  })
-
-  const selectedFeatures = select.getFeatures()
-
-  select.on('select', function (e) {
-    // console.log(e.target, e, e.target.getFeatures())
-  })
-
-
-  map.addInteraction(select)
-
-
-  dragBox.on('boxend', function () {
-    // 获取多边形的外接矩形范围
-    const extent = dragBox.getGeometry().getExtent()
-    const layers = map.getAllLayers()
-    console.log(layers, extent)
-    for (const layer of layers) {
-      let layerSource = layer.getSource()
-      if (layerSource.getFeaturesInExtent) {
-        // debugger
-        const inExtentFeatures = layerSource.getFeaturesInExtent(extent)
-          .filter((feature) => feature.getGeometry().intersectsExtent(extent))
-        selectedFeatures.extend(inExtentFeatures)
-        console.log(inExtentFeatures, layerSource)
-      }
-
-
+    const selected = map.getFeaturesAtPixel(pixel)
+    if (selected.length === 0) {
+      setSelect(null)
+      return
     }
 
-    console.log(selectedFeatures)
+    for (const f of selected) {
+      setSelect(f)
+    }
   })
 
-  // clear selection when drawing a new box and when clicking on the map
-  dragBox.on('boxstart', function () {
-    selectedFeatures.clear()
-  })
+  return { setSelect }
 }
-
 
 /**
  * 使用每个feature的方法判断相交

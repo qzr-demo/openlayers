@@ -6,17 +6,16 @@ import Draw, {
   createRegularPolygon,
 } from 'ol/interaction/Draw'
 
-export default function(map) {
-  const dragBox = ctrlDraw(map)
+export default function(map, setSelect) {
+  ctrlDraw(map, setSelect)
   // clickDraw(map)
 
-  return { dragBox }
 }
 
 /**
  * ctrl按住画框
  */
-function ctrlDraw(map) {
+function ctrlDraw(map, setSelect) {
   const dragBox = new DragBox({
     // ctrl修饰符
     condition: platformModifierKeyOnly,
@@ -24,7 +23,24 @@ function ctrlDraw(map) {
 
   map.addInteraction(dragBox)
 
-  return dragBox
+
+  dragBox.on('boxend', function () {
+    // 获取多边形的外接矩形范围
+    const extent = dragBox.getGeometry().getExtent()
+    const layers = map.getAllLayers()
+    console.log(layers, extent)
+    for (const layer of layers) {
+      let layerSource = layer.getSource()
+      if (layerSource.getFeaturesInExtent) {
+        // debugger
+        const inExtentFeatures = layerSource.getFeaturesInExtent(extent)
+          .filter((feature) => feature.getGeometry().intersectsExtent(extent))
+        for (const f of inExtentFeatures) {
+          setSelect(f)
+        }
+      }
+    }
+  })
 }
 
 /**
