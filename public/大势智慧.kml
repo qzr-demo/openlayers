@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" 
+	xmlns:atom="http://www.w3.org/2005/Atom" 
+	xmlns:gx="http://www.google.com/kml/ext/2.2" 
+	>
+	<Document>
+		<name>OvitalMap_20220401_091708</name>
+		<Placemark>
+			<name>金融港片区</name>
+			<Style>
+				<LineStyle><color>7fff0000</color><width>1</width></LineStyle>
+				<PolyStyle><color>7fff0000</color></PolyStyle>
+			</Style>
+      <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+          <LinearRing>
+            <coordinates>114.41474279,30.46266652,0 114.42679747,30.46289835,0 114.42701311,30.45492850,0 114.41500126,30.45473354,0 114.41474279,30.46266652,0 </coordinates>
+          </LinearRing>
+        </outerBoundaryIs>
+      </Polygon>
+		</Placemark>
+	</Document>
+</kml>
