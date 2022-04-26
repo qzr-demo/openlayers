@@ -2,7 +2,7 @@ import { KML } from 'ol/format'
 import DragAndDrop from 'ol/interaction/DragAndDrop'
 import useRead from './useRead'
 
-export default function(map, uploadStyle, kmlInfo) {
+export default function(map, kmlInfo, allFeature) {
   const Kml = new KML({
     // extractStyles读取kml中的样式
     extractStyles: false
@@ -24,7 +24,7 @@ export default function(map, uploadStyle, kmlInfo) {
 
   inter.on('addfeatures', e => {
     const { file, features } = e
-
-    useRead(file, map, uploadStyle, kmlInfo)
+    console.log(file, features)
+    useRead(file, map, kmlInfo, allFeature)
   })
 }

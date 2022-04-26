@@ -1,4 +1,8 @@
-export default function({ selected, defaultStyle, selectedStyle }) {
+import useStyle from './useStyle'
+
+export default function({ selected, inTask }) {
+  const { selectedStyle, defaultStyle } = useStyle()
+
   function setSelect(f) {
     if (f === null) {
       for (const item of selected.value) {
@@ -8,6 +12,10 @@ export default function({ selected, defaultStyle, selectedStyle }) {
       return
     }
     const selIndex = selected.value.indexOf(f)
+    const inTaskIndex = inTask.value.findIndex(item => item.ol_uid === f.ol_uid)
+
+    if (inTaskIndex !== -1) return
+
     if (selIndex < 0) {
       selected.value.push(f)
       f.setStyle(selectedStyle)

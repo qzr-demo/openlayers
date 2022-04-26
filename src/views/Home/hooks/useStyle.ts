@@ -25,5 +25,15 @@ export default function() {
     })
   })
 
-  return { selectedStyle, defaultStyle }
+  const confirmStyle = new Style({
+    fill: new Fill({
+      color: '#f4112099'
+    }),
+    stroke: new Stroke({
+      color: '#fff',
+      width: 1
+    })
+  })
+
+  return { selectedStyle, defaultStyle, confirmStyle }
 }

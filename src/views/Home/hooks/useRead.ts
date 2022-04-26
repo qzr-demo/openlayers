@@ -1,8 +1,10 @@
 import { Vector as VectorSource } from 'ol/source'
 import { Vector as VectorLayer } from 'ol/layer'
 import { KML } from 'ol/format'
+import useStyle from './useStyle'
 
-export default function(file, map, uploadStyle, kmlInfo) {
+export default function(file, map, kmlInfo, allFeature) {
+  const { defaultStyle } = useStyle()
   const reader = new FileReader()
   reader.readAsText(file)
 
@@ -21,22 +23,29 @@ export default function(file, map, uploadStyle, kmlInfo) {
       featureProjection: 'EPSG:3857' // 设定当前地图使用的feature的坐标系
     })
 
+    allFeature.value.push(...features)
+
     const name = Kml.readName(res)
 
     const featuresArr = features.map((item:any) => {
       return {
+        id: item.ol_uid,
         data: {
+          id: item.ol_uid,
           name: item.values_.name,
-          extend: item.values_.geometry.extent_
+          extend: item.values_.geometry.extent_,
         },
-        label: item.values_.name
+        self: item,
+        label: item.values_.name,
+        isLeaf: true
       }
     })
 
     kmlInfo.value.push({
       data: {},
       label: name,
-      children: featuresArr
+      children: featuresArr,
+      isLeaf: false
     })
 
     const uploadSource = new VectorSource({
@@ -46,7 +55,7 @@ export default function(file, map, uploadStyle, kmlInfo) {
 
     let kmlLayer = new VectorLayer({
       source: uploadSource,
-      style: uploadStyle
+      style: defaultStyle
     })
 
     map.addLayer(kmlLayer)
